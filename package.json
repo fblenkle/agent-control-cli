@@ -1,6 +1,6 @@
 {
   "name": "@agent-control/cli",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "access": "public",
   "bin": {
