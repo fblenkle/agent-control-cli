@@ -1,0 +1,12 @@
+export { addRepo } from './add-repo.js';
+export { installAgent } from './install.js';
+export { uninstallAgent } from './uninstall.js';
+export { listAvailableAgents } from './list-available.js';
+export { listInstalledAgents } from './list.js';
+export { listRepos } from './list-repos.js';
+export { removeRepo } from './remove-repo.js';
+export { showAgentInfo } from './info.js';
+export { cleanup } from './cleanup.js';
+export { update } from './update.js';
+export { doctor } from './doctor.js';
+export { interactive } from '../tools/interactive.js';
