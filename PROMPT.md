@@ -170,7 +170,7 @@ Wird ausgeführt bei: `add-repo`, `update`.
   2. Passenden Skill im selben Repo via Meta-Daten suchen.
   3. Ist der Skill noch nicht installiert → wird er **automatisch mit-installiert**.
   4. Ist der Skill im Repo nicht bekannt → **Fehler, Abbruch mit Rollback**.
-  5. Im kopierten Agent-JSON wird `skill://skills/my-skill/SKILL.md` ersetzt durch `skill://~/.kiro/skills/agent_control_<skill-hash>/SKILL.md`.
+  5. Im kopierten Agent-JSON wird `skill://skills/my-skill/SKILL.md` ersetzt durch `skill://~/.kiro/skills/agent-control_<skill-hash>/SKILL.md`.
 
 ### 3.2 Skill-Analyse
 
