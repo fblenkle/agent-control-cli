@@ -113,4 +113,7 @@ program
   .description('Start interactive mode')
   .action(interactive);
 
-program.parse();
+program.parseAsync().catch((err) => {
+  console.error(`Error: ${err.message}`);
+  process.exit(1);
+});

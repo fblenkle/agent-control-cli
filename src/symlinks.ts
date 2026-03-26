@@ -17,10 +17,10 @@ function resolveFileUrlReference(jsonDir: string, fileUrl: string): string {
 function resolveSkillReference(
   resource: string,
   repoName: string,
-  repoPath: string,
   meta: import('./types.js').RepoMeta | null,
   config: import('./types.js').Config,
-  installedSkillIds: string[]
+  installedSkillIds: string[],
+  installedSkillSymlinks: Record<string, string[]>
 ): string {
   const skillRelPath = resource.replace('skill://', '');
   // Extract skill directory name (e.g. "skills/my-skill/SKILL.md" → "my-skill")
@@ -41,6 +41,7 @@ function resolveSkillReference(
     writeConfig(config);
     registerSymlinks(skill.id, symlinks);
     installedSkillIds.push(skill.id);
+    installedSkillSymlinks[skill.id] = symlinks;
     console.log(`  Auto-installed skill ${skill.name} (${skill.id}) from ${repoName}`);
   }
 
@@ -49,7 +50,7 @@ function resolveSkillReference(
   return `skill://${join(KIRO_SKILLS_DIR, `agent-control_${skill.id}`, relativeInSkill)}`;
 }
 
-export function installAgentFiles(agent: Agent, repoName: string): { jsonPath: string; filesDir: string; symlinks: string[]; installedSkillIds: string[] } {
+export function installAgentFiles(agent: Agent, repoName: string): { jsonPath: string; filesDir: string; symlinks: string[]; installedSkillIds: string[]; installedSkillSymlinks: Record<string, string[]> } {
   const repoPath = getRepoPath(repoName);
   const agentDir = getAgentDir(agent.id);
   const filesDir = join(agentDir, 'files');
@@ -101,13 +102,14 @@ export function installAgentFiles(agent: Agent, repoName: string): { jsonPath: s
 
   // Resolve skill:// references and update resources paths
   const installedSkillIds: string[] = [];
+  const installedSkillSymlinks: Record<string, string[]> = {};
   if (Array.isArray(jsonData.resources)) {
     const meta = loadRepoMeta(repoName);
     const config = readConfig();
 
     jsonData.resources = jsonData.resources.map(resource => {
       if (resource.startsWith('skill://')) {
-        return resolveSkillReference(resource, repoName, repoPath, meta, config, installedSkillIds);
+        return resolveSkillReference(resource, repoName, meta, config, installedSkillIds, installedSkillSymlinks);
       }
 
       if (resource.startsWith('file://')) {
@@ -142,7 +144,8 @@ export function installAgentFiles(agent: Agent, repoName: string): { jsonPath: s
     jsonPath: jsonTargetPath,
     filesDir,
     symlinks: [jsonSymlink, filesSymlink],
-    installedSkillIds
+    installedSkillIds,
+    installedSkillSymlinks
   };
 }
 

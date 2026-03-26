@@ -22,10 +22,12 @@ export async function installAgent(repo: string, agentId: string): Promise<void>
   
   let symlinks: string[] = [];
   let installedSkillIds: string[] = [];
+  let installedSkillSymlinks: Record<string, string[]> = {};
   try {
     const result = installAgentFiles(agent, repo);
     symlinks = result.symlinks;
     installedSkillIds = result.installedSkillIds;
+    installedSkillSymlinks = result.installedSkillSymlinks;
     
     config.agents.push({ id: agent.id, repo, name: agent.name });
     writeConfig(config);
@@ -35,7 +37,7 @@ export async function installAgent(repo: string, agentId: string): Promise<void>
     console.log(`Installed ${agent.name} (${agent.id}) from ${repo}`);
   } catch (err) {
     for (const skillId of installedSkillIds) {
-      rollbackSkillInstallation(skillId, []);
+      rollbackSkillInstallation(skillId, installedSkillSymlinks[skillId] || []);
     }
     rollbackInstallation(agent.id, symlinks);
     throw err;
